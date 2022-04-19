@@ -18,3 +18,9 @@ const complaintRemarksSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+const ComplaintRemarks = mongoose.model(
+  "ComplaintRemarks",
+  complaintRemarksSchema
+);
+module.exports = ComplaintRemarks;
