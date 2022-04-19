@@ -45,13 +45,11 @@ const CategoryUpdate = async (req, res) => {
 
 const CategoryDelete = async (req, res) => {
   try {
-    const category = await Category.findOneAndDelete({ _id: req.params.id });
-    if (!category) {
-      res.status(404).send();
-    }
-    res.send(category);
+    const category = await Category.findById(req.params.id);
+    await category.remove();
+    res.status(200).send(category);
   } catch (e) {
-    res.status(500).send("Data Deleted Successfully");
+    res.status(500).send(e);
   }
 };
 

@@ -3,9 +3,8 @@ const { emailsend } = require("../email/account");
 const OtP = require("../models/otpModel");
 
 const Register = async (req, res) => {
-  const user = new User(req.body);
   try {
-    const emails = await User.findOne({ emial: req.body.email });
+    const user = new User(req.body);
     await user.save();
     res.status(201).send(user);
   } catch (e) {
@@ -26,6 +25,7 @@ const Login = async (req, res) => {
       throw new Error("Wait for sometimes. Admin can verify you soon...");
     }
     const token = await user.generateAuthToken();
+
     res.status(200).send({
       _id: user._id,
       username: user.username,

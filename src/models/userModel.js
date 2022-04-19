@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { strategy } = require("sharp");
 
 const userSchema = new mongoose.Schema(
   {
@@ -80,6 +81,21 @@ const userSchema = new mongoose.Schema(
       required: false,
       maxlength: 6,
     },
+    address: {
+      type: String,
+      required: false,
+    },
+    user_image: {
+      type: String,
+      required: false,
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+        },
+      },
+    ],
   },
 
   {
@@ -87,19 +103,19 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
   delete userObject.password;
   delete userObject.__v;
   delete userObject.tokens;
-  delete userObject.avatar;
   return userObject;
 };
 
-userSchema.methods.generateAuthToken = async function() {
+userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, "thisismyDemoProject");
+  user.tokens = user.tokens.concat({ token: token });
   await user.save();
   return token;
 };
@@ -116,7 +132,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   return user;
 };
 
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 8);
@@ -124,7 +140,7 @@ userSchema.pre("save", async function(next) {
   next();
 });
 
-userSchema.pre("remove", async function(next) {
+userSchema.pre("remove", async function (next) {
   const user = this;
   await Task.deleteMany({ owner: user._id });
   next();
