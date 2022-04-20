@@ -1,10 +1,12 @@
 const User = require("../models/userModel");
 const { emailsend } = require("../email/account");
 const OtP = require("../models/otpModel");
+const { verifyEmail, registerEmail } = require("../email/account");
 
 const Register = async (req, res) => {
   try {
     const user = new User(req.body);
+    registerEmail(req.body.email);
     await user.save();
     res.status(201).send(user);
   } catch (e) {
@@ -69,6 +71,7 @@ const verifyUser = async (req, res) => {
   if (!user) {
     throw new Error("User not found");
   }
+  verifyEmail(user.email);
   const updates = Object.keys(req.body);
   const allowedUpdates = ["verify"];
 
