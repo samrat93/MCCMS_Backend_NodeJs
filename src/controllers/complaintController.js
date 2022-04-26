@@ -106,6 +106,38 @@ const ComplaintDelete = async (req, res) => {
   }
 };
 
+const PendingComplaintList = async (req, res) => {
+  try {
+    const pendingComplaint = await Complaint.find({
+      complaint_status: "Pending",
+    });
+    res.status(200).send(pendingComplaint);
+  } catch (e) {
+    res.status(404).send(e.message);
+  }
+};
+const ProcessingComplaintList = async (req, res) => {
+  try {
+    const processingComplaint = await Complaint.find({
+      complaint_status: "Processing",
+    });
+    res.status(200).send(processingComplaint);
+  } catch (e) {
+    res.status(404).send(e.message);
+  }
+};
+
+const ClosedComplaintList = async (req, res) => {
+  try {
+    const closedComplaint = await Complaint.find({
+      complaint_status: "Closed",
+    });
+    res.status(200).send(closedComplaint);
+  } catch (e) {
+    res.status(404).send(e.message);
+  }
+};
+
 module.exports = {
   ComplaintPost,
   ComplaintGet,
@@ -113,4 +145,7 @@ module.exports = {
   ComplaintDelete,
   upload,
   ListAllComplaint,
+  PendingComplaintList,
+  ProcessingComplaintList,
+  ClosedComplaintList,
 };

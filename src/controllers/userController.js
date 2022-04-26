@@ -44,12 +44,48 @@ const Login = async (req, res) => {
   }
 };
 
-const listAllUser = async (req, res) => {
+const listAllUser = async (req, res, next) => {
   try {
-    const users = await User.find({});
-    res.status(200).send(users);
+    let { page, limit, sort } = req.query;
+    const size = parseInt(limit);
+    let start = 0;
+    if (!page) {
+      page = 1;
+    }
+    if (!limit) {
+      limit = 2;
+    }
+    if (page) {
+      start = (page - 1) * limit;
+    }
+    console.log(start, start + Number(limit));
+
+    const users0 = await User.find({ isAdmin: false });
+    const users = users0.slice(start, start + Number(limit));
+    // .limit(limit).sort({ votes: 1, _id: 1 })
+    const total = Math.ceil(users0.length / Number(limit));
+    res.status(200).send({ page, limit, total, users });
   } catch (e) {
-    res.send(400).send(e);
+    console.log(e.message);
+    res.status(400).send(e);
+  }
+};
+
+const ActiveUsers = async (req, res) => {
+  try {
+    const activeUsers = await User.find({ verify: true, isAdmin: false });
+    res.status(200).send(activeUsers);
+  } catch (e) {
+    res.status(404).send(e.message);
+  }
+};
+
+const UnverifiedUsers = async (req, res) => {
+  try {
+    const UnverifiedUsers = await User.find({ verify: false, isAdmin: false });
+    res.status(200).send(UnverifiedUsers);
+  } catch (e) {
+    res.status(404).send(e.message);
   }
 };
 
@@ -145,4 +181,6 @@ module.exports = {
   verifyUser,
   ForgetPassword,
   UpdatePassword,
+  ActiveUsers,
+  UnverifiedUsers,
 };
