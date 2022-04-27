@@ -104,7 +104,7 @@ const ListAllComplaint = async (req, res, next) => {
     const complist = complaintList.slice(start, start + Number(limit));
     const total = Math.ceil(complaintList.length / Number(limit));
 
-    res.status(200).send({ page, limit, total, complist });
+    res.status(200).send({ page, limit, total_page: total, complist });
   } catch (e) {
     res.status(404).send(e.message);
   }
