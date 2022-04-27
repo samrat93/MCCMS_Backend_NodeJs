@@ -7,4 +7,4 @@ following provided information.
 Created by: Samrat Bikram Shah
 email: samrat.b.shah2016@gmail.com
 facebook:fb.com/unique.s.shah
-website: http://samratbikramshah.com.np/
+website: https://iamsamrat.netlify.app/
