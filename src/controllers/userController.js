@@ -62,7 +62,6 @@ const listAllUser = async (req, res, next) => {
 
     const users0 = await User.find({ isAdmin: false });
     const users = users0.slice(start, start + Number(limit));
-    // .limit(limit).sort({ votes: 1, _id: 1 })
     const total = Math.ceil(users0.length / Number(limit));
     res.status(200).send({ page, limit, total, users });
   } catch (e) {
