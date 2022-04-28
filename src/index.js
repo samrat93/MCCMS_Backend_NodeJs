@@ -1,26 +1,18 @@
-const express = require("express");
-const userRouter = require("./router/userRouter");
-const categoryRouter = require("./router/categoryRouter");
-const subcatRouter = require("./router/subcatRouter");
-const complaintRouter = require("./router/complaintRouter");
-const profileRouter = require("./router/profileRouter");
-const complaintRemarksRouter = require("./router/complaintRemarksRouter");
-const feedbackRouter = require("./router/feedbackRouter");
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
+import store from "../src/store/store";
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root")
+);
 
-require("./db/db");
-
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(express.json());
-app.use(userRouter);
-app.use(categoryRouter);
-app.use(subcatRouter);
-app.use(complaintRouter);
-app.use(profileRouter);
-app.use(complaintRemarksRouter);
-app.use(feedbackRouter);
-
-app.listen(port, () => {
-  console.log("server is up on port" + port);
-});
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
