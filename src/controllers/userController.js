@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const { emailsend } = require("../email/account");
 const OtP = require("../models/otpModel");
+const excelJs = require("exceljs");
 const { verifyEmail, registerEmail } = require("../email/account");
 
 const Register = async (req, res) => {
@@ -172,6 +173,58 @@ const UpdatePassword = async (req, res) => {
   }
 };
 
+const exportUser = async (req, res) => {
+  const workbook = new excelJs.Workbook();
+  const worksheet = workbook.addWorksheet("My Users");
+  const path = "./files";
+  worksheet.columns = [
+    { header: "S.N", key: "s_no", width: 10 },
+    { header: "username", key: "username", width: 10 },
+    { header: "email", key: "email", width: 10 },
+    { header: "type", key: "type", width: 10 },
+    { header: "verify", key: "verify", width: 10 },
+    { header: "createdAt", key: "createdAt", width: 10 },
+    { header: "user_image", key: "user_image", width: 10 },
+    { header: "address", key: "address", width: 10 },
+    { header: "country", key: "country", width: 10 },
+    { header: "first_name", key: "first_name", width: 10 },
+    { header: "gender", key: "gender", width: 10 },
+    { header: "first_name", key: "first_name", width: 10 },
+    { header: "pincode", key: "pincode", width: 10 },
+    { header: "state", key: "state", width: 10 },
+  ];
+  const userdata = await User.find({ isAdmin: false });
+  // console.log("userdata", userdata);
+  let counter = 1;
+  userdata?.forEach((user) => {
+    user.s_no = counter;
+    worksheet.addRow(user);
+    counter++;
+  });
+  worksheet.getRow(1).eachCell((cell) => {
+    cell.font = { bold: true };
+  });
+  const data2 = await workbook.xlsx;
+  // console.log("data2", data2);
+  try {
+    const data = await workbook.xlsx
+      .writeFile(`${path}/users.xlsx`)
+      .then(() => {
+        res.send({
+          status: "success",
+          message: "file successfully downloaded",
+          path: `${path}/users.xlsx`,
+        });
+      });
+    // console.log("data is ", data);
+  } catch (e) {
+    res.send({
+      status: "error",
+      message: "something went wrong",
+    });
+  }
+};
+
 module.exports = {
   Register,
   Login,
@@ -182,4 +235,5 @@ module.exports = {
   UpdatePassword,
   ActiveUsers,
   UnverifiedUsers,
+  exportUser,
 };

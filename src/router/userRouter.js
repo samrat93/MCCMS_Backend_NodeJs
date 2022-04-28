@@ -10,6 +10,7 @@ const {
   UpdatePassword,
   ActiveUsers,
   UnverifiedUsers,
+  exportUser,
 } = require("../controllers/userController");
 
 const router = new express.Router();
@@ -23,5 +24,6 @@ router.post("/users/forgetpassword", ForgetPassword);
 router.patch("/users/passwordchange", UpdatePassword);
 router.get("/users/active-users", auth, ActiveUsers);
 router.get("/users/inactive-users", auth, UnverifiedUsers);
+router.get("/users/download", auth, exportUser);
 
 module.exports = router;
