@@ -34,10 +34,6 @@ const Login = async (req, res) => {
       username: user.username,
       name: user.name,
       email: user.email,
-      isAdmin: user.isAdmin,
-      type: user.type,
-      mobileNo: user.mobileNo,
-      isProfileUpdate: user.isProfileUpdate,
       token,
     });
   } catch (e) {

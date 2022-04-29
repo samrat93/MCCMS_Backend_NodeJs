@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const userRouter = require("./router/userRouter");
 const categoryRouter = require("./router/categoryRouter");
 const subcatRouter = require("./router/subcatRouter");
@@ -10,8 +11,8 @@ const feedbackRouter = require("./router/feedbackRouter");
 require("./db/db");
 
 const app = express();
-const port = process.env.PORT || 3000;
-
+const port = process.env.PORT || 5000;
+app.use(cors());
 app.use(express.json());
 app.use(userRouter);
 app.use(categoryRouter);
