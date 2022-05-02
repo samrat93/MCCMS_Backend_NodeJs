@@ -6,10 +6,17 @@ const { verifyEmail, registerEmail } = require("../email/account");
 
 const Register = async (req, res) => {
   try {
-    const user = new User(req.body);
-    registerEmail(req.body.email);
-    await user.save();
-    res.status(201).send(user);
+    let user = await User.findOne({ email: req.body.email });
+    if (user) {
+      return res
+        .status(400)
+        .send({ emailExist: "User with this email is already exist" });
+    } else {
+      const user = new User(req.body);
+      registerEmail(req.body.email);
+      await user.save();
+      res.status(201).send(user);
+    }
   } catch (e) {
     res.status(400).send(e);
   }
@@ -30,10 +37,6 @@ const Login = async (req, res) => {
     const token = await user.generateAuthToken();
 
     res.status(200).send({
-      _id: user._id,
-      username: user.username,
-      name: user.name,
-      email: user.email,
       token,
     });
   } catch (e) {
@@ -221,9 +224,35 @@ const exportUser = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  console.log("first");
+  try {
+    req.user.tokens = req.user.tokens.filter((obj) => {
+      return String(obj.token) !== String(req.token);
+    });
+    await req.user.save();
+    res.send({ message: "Logout successfully" });
+  } catch (e) {
+    console.log("error in logout", e.message);
+    res.status(500).send(e.message);
+  }
+};
+
+const logoutAll = async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+    res.send({ message: "Logout successfully from all devices" });
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+};
+
 module.exports = {
   Register,
   Login,
+  logout,
+  logoutAll,
   listAllUser,
   userDelete,
   verifyUser,

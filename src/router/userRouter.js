@@ -11,6 +11,8 @@ const {
   ActiveUsers,
   UnverifiedUsers,
   exportUser,
+  logout,
+  logoutAll,
 } = require("../controllers/userController");
 
 const router = new express.Router();
@@ -25,5 +27,7 @@ router.patch("/users/passwordchange", UpdatePassword);
 router.get("/users/active-users", auth, ActiveUsers);
 router.get("/users/inactive-users", auth, UnverifiedUsers);
 router.get("/users/download", auth, exportUser);
+router.post("/users/logout", auth, logout);
+router.post("/users/logoutall", auth, logoutAll);
 
 module.exports = router;
