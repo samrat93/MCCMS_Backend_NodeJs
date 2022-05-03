@@ -7,10 +7,11 @@ const { verifyEmail, registerEmail } = require("../email/account");
 const Register = async (req, res) => {
   try {
     let user = await User.findOne({ email: req.body.email });
-    if (user) {
+    let uname = await User.findOne({ username: req.body.username });
+    if (user || uname) {
       return res
         .status(400)
-        .send({ emailExist: "User with this email is already exist" });
+        .send({ emailExist: "Username or email is already exist" });
     } else {
       const user = new User(req.body);
       registerEmail(req.body.email);
@@ -44,28 +45,11 @@ const Login = async (req, res) => {
   }
 };
 
-const listAllUser = async (req, res, next) => {
+const listAllUser = async (req, res) => {
   try {
-    let { page, limit, sort } = req.query;
-    const size = parseInt(limit);
-    let start = 0;
-    if (!page) {
-      page = 1;
-    }
-    if (!limit) {
-      limit = 2;
-    }
-    if (page) {
-      start = (page - 1) * limit;
-    }
-    console.log(start, start + Number(limit));
-
-    const users0 = await User.find({ isAdmin: false });
-    const users = users0.slice(start, start + Number(limit));
-    const total = Math.ceil(users0.length / Number(limit));
-    res.status(200).send({ page, limit, total, users });
+    const users = await User.find({ isAdmin: false });
+    res.status(200).send(users);
   } catch (e) {
-    console.log(e.message);
     res.status(400).send(e);
   }
 };
@@ -114,7 +98,6 @@ const verifyUser = async (req, res) => {
     allowedUpdates.includes(update)
   );
 
-  // console.log("data-in-verify" + isValidOperation);
   if (!isValidOperation) {
     return res.status(400).send({ error: "Invalid updates!" });
   }
@@ -193,7 +176,6 @@ const exportUser = async (req, res) => {
     { header: "state", key: "state", width: 10 },
   ];
   const userdata = await User.find({ isAdmin: false });
-  // console.log("userdata", userdata);
   let counter = 1;
   userdata?.forEach((user) => {
     user.s_no = counter;
@@ -204,7 +186,6 @@ const exportUser = async (req, res) => {
     cell.font = { bold: true };
   });
   const data2 = await workbook.xlsx;
-  // console.log("data2", data2);
   try {
     const data = await workbook.xlsx
       .writeFile(`${path}/users.xlsx`)
@@ -215,7 +196,6 @@ const exportUser = async (req, res) => {
           path: `${path}/users.xlsx`,
         });
       });
-    // console.log("data is ", data);
   } catch (e) {
     res.send({
       status: "error",
@@ -225,7 +205,6 @@ const exportUser = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  console.log("first");
   try {
     req.user.tokens = req.user.tokens.filter((obj) => {
       return String(obj.token) !== String(req.token);
@@ -233,7 +212,6 @@ const logout = async (req, res) => {
     await req.user.save();
     res.send({ message: "Logout successfully" });
   } catch (e) {
-    console.log("error in logout", e.message);
     res.status(500).send(e.message);
   }
 };

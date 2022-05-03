@@ -17,9 +17,9 @@ const {
 
 const router = new express.Router();
 
-router.post("/users", Register);
+router.post("/users/registration", Register);
 router.post("/users/login", Login);
-router.get("/users", auth, listAllUser);
+router.get("/users/listalluser", auth, listAllUser);
 router.delete("/user/delete/:id", auth, admin, userDelete);
 router.patch("/user/verify/:id", auth, verifyUser);
 router.post("/users/forgetpassword", ForgetPassword);
