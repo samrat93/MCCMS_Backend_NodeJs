@@ -10,7 +10,7 @@ const StatePost = async (req, res) => {
     } else {
       const stateData = new StateModel(req.body);
       await stateData.save();
-      res.status(201).send(stateData);
+      res.status(201).send("State added successfully.");
     }
   } catch (e) {
     res.status(400).send(e.message);
@@ -43,7 +43,7 @@ const StateUpdate = async (req, res) => {
     }
     updates.forEach((update) => (stateData[update] = req.body[update]));
     await stateData.save();
-    res.json("State data updated successfully.");
+    res.json("State updated successfully.");
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -52,11 +52,11 @@ const StateUpdate = async (req, res) => {
 const StateDelete = async (req, res) => {
   try {
     const stateId = req.params.id;
-    const stateData = await StateModel.findOneAndDelete(stateId);
+    const stateData = await StateModel.findByIdAndDelete(stateId);
     if (!stateData) {
       res.status(400).send(e.message);
     }
-    res.send(stateData);
+    res.send("State deleted successfully");
   } catch (e) {
     res.status(500).send(e.message);
   }
