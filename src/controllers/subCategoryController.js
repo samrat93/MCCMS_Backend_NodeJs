@@ -1,10 +1,10 @@
-const Sub_Category = require("../models/complaintSubCatModel");
+const SubCategory = require("../models/complaintSubCatModel");
 
 const Sub_CategoryPost = async (req, res) => {
   try {
-    const subcategory = new Sub_Category(req.body);
+    const subcategory = new SubCategory(req.body);
     await subcategory.save();
-    res.send(subcategory);
+    res.send("Sub-category added successfully.");
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
@@ -12,7 +12,7 @@ const Sub_CategoryPost = async (req, res) => {
 
 const Sub_CategoryGet = async (req, res) => {
   try {
-    const subcategory = await Sub_Category.find({});
+    const subcategory = await SubCategory.find({});
     res.status(200).send(subcategory);
   } catch (e) {
     res.status(400).send();
@@ -21,17 +21,13 @@ const Sub_CategoryGet = async (req, res) => {
 
 const Sub_CategoryUpdate = async (req, res) => {
   const subcatid = req.params.id;
-  const subcategory = await Sub_Category.findById(subcatid);
+  const subcategory = await SubCategory.findById(subcatid);
 
   if (!subcategory) {
     throw new Error("Sub category not found.");
   }
   const updates = Object.keys(req.body);
-  const allowedUpdates = [
-    "sub_category_name",
-    "sub_category_desc",
-    "category_id",
-  ];
+  const allowedUpdates = ["subCategoryName", "subCategoryDesc", "categoryId"];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
@@ -49,9 +45,9 @@ const Sub_CategoryUpdate = async (req, res) => {
 
 const Sub_CategoryDelete = async (req, res) => {
   try {
-    const subcategory = await Sub_Category.findOneAndDelete({
+    const subcategory = await SubCategory.findOneAndDelete({
       _id: req.params.id,
-      category_id: req.Category._id,
+      categoryId: req.Category._id,
     });
     if (!subcategory) {
       res.status(404).send();

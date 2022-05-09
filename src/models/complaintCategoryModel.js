@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
-const Sub_Category = require("../models/complaintSubCatModel");
+const SubCategory = require("../models/complaintSubCatModel");
 
 const categorySchema = new mongoose.Schema(
   {
-    category_name: {
+    categoryName: {
       type: String,
       required: true,
       unique: true,
     },
-    category_desc: {
+    categoryDesc: {
       type: String,
       required: false,
     },
@@ -17,14 +17,14 @@ const categorySchema = new mongoose.Schema(
 );
 
 categorySchema.virtual("subcategory", {
-  ref: "Sub_Category",
+  ref: "SubCategory",
   localField: "_id",
-  foreignField: "category_id",
+  foreignField: "categoryId",
 });
 
 categorySchema.pre("remove", async function (next) {
   const category = this;
-  await Sub_Category.deleteMany({ category_id: category._id });
+  await SubCategory.deleteMany({ categoryId: category._id });
   next();
 });
 

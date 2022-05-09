@@ -78,7 +78,7 @@ const userDelete = async (req, res) => {
     if (!user) {
       res.status(404).send("User not found.");
     }
-    res.send(user);
+    res.send("User deleted successfully.");
   } catch (e) {
     res.status(500).send(e);
   }
@@ -91,6 +91,7 @@ const verifyUser = async (req, res) => {
     throw new Error("User not found");
   }
   verifyEmail(user.email);
+  console.log(req.body);
   const updates = Object.keys(req.body);
   const allowedUpdates = ["verify"];
 
@@ -102,17 +103,10 @@ const verifyUser = async (req, res) => {
     return res.status(400).send({ error: "Invalid updates!" });
   }
   try {
+    console.log(updates);
     updates.forEach((update) => (user[update] = req.body[update]));
     await user.save();
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      verify: user.verify,
-      type: user.type,
-      mobileNo: user.mobileNo,
-      isProfileUpdate: user.isProfileUpdate,
-    });
+    res.json("User status updated successfully.");
   } catch (e) {
     res.status(400).send(e.message);
   }

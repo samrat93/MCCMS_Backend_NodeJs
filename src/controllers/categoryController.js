@@ -2,10 +2,18 @@ const Category = require("../models/complaintCategoryModel");
 
 const CategoryPost = async (req, res) => {
   try {
-    const category = new Category(req.body);
-    await category.save();
-    res.status(201).send(category);
-    // res.send("Data saved successfully");
+    let catName = await Category.findOne({
+      categoryName: req.body.categoryName,
+    });
+    if (catName) {
+      return res
+        .status(400)
+        .send({ categoryExist: "Category with this name is already exist." });
+    } else {
+      const category = new Category(req.body);
+      await category.save();
+      res.status(201).send("New category added successfully.");
+    }
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
@@ -13,26 +21,9 @@ const CategoryPost = async (req, res) => {
 
 const CategoryList = async (req, res, next) => {
   try {
-    let { page, limit } = req.query;
-
-    let start = 0;
-    if (!page) {
-      page = 1;
-    }
-    if (!limit) {
-      limit = 2;
-    }
-    if (page) {
-      start = (page - 1) * limit;
-    }
-
     const catlist = await Category.find({});
-    const catList = catlist.slice(start, start + Number(limit));
-    const total = Math.ceil(catlist.length / Number(limit));
 
-    res
-      .status(200)
-      .send({ current_page: page, limit, total_page: total, catList });
+    res.status(200).send(catlist);
   } catch (e) {
     res.status(404).send();
   }
@@ -65,7 +56,7 @@ const CategoryDelete = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
     await category.remove();
-    res.status(200).send(category);
+    res.status(200).send("Category deleted successfully.");
   } catch (e) {
     res.status(500).send(e);
   }

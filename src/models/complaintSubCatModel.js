@@ -2,16 +2,16 @@ const mongoose = require("mongoose");
 
 const subCatSchema = new mongoose.Schema(
   {
-    sub_category_name: {
+    subCategoryName: {
       type: String,
       required: true,
       unique: true,
     },
-    sub_category_desc: {
+    subCategoryDesc: {
       type: String,
       required: false,
     },
-    category_id: {
+    categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
     },
@@ -19,5 +19,5 @@ const subCatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Sub_Category = mongoose.model("Sub_Category", subCatSchema);
-module.exports = Sub_Category;
+const SubCategory = mongoose.model("SubCategory", subCatSchema);
+module.exports = SubCategory;
