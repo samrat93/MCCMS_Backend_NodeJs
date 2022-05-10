@@ -2,33 +2,29 @@ const mongoose = require("mongoose");
 
 const complaintSchema = new mongoose.Schema(
   {
-    complaint_subject: {
+    complaintSubject: {
       type: String,
       required: true,
     },
-    complaint_details: {
+    complaintDetails: {
       type: String,
       required: false,
     },
-    complaint_status: {
+    complaintStatus: {
       type: String,
       enum: ["Pending", "Processing", "Closed"],
       required: true,
       default: "Pending",
     },
-    complaint_category: {
+    complaintCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
     },
-    complaint_sub_category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Sub_Category",
-    },
-    complaint_file: {
+    complaintFile: {
       type: String,
       required: false,
     },
-    user_id: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
     },
   },

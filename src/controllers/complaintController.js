@@ -32,12 +32,12 @@ const ComplaintPost = async (req, res) => {
 
     const complaint = new Complaint({
       ...req.body,
-      complaint_file: pathName,
+      complaintFile: pathName,
     });
     await complaint.save();
-    res.status(201).send(complaint);
-  } catch (e) {
-    res.status(400).send({ error: error.message });
+    res.status(201).send("Complaint registered successfully.");
+  } catch (error) {
+    res.status(400).send(error.message);
   }
 };
 
@@ -54,7 +54,7 @@ const ComplaintUpdate = async (req, res) => {
       newComplaint = {
         ...newComplaint,
         _id: req.params.id,
-        complaint_file: req.file.path,
+        complaintFile: req.file.path,
       };
     } else {
       newComplaint = {
@@ -67,7 +67,7 @@ const ComplaintUpdate = async (req, res) => {
       { $set: newComplaint },
       { new: true }
     );
-    res.send(newComplaint);
+    res.send("Complaint updated successfully.");
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -76,36 +76,35 @@ const ComplaintUpdate = async (req, res) => {
 const ComplaintGet = async (req, res) => {
   try {
     const userId = req.params.id;
-    // const complaintlist = await Complaint.findById(userId);
     const complaintList = await Complaint.find({ user_id: userId });
-
     res.status(200).send(complaintList);
   } catch (e) {
     res.status(404).send();
   }
 };
 
-const ListAllComplaint = async (req, res, next) => {
+const ListAllComplaint = async (req, res) => {
   try {
-    let { page, limit } = req.query;
-    let start = 0;
-    if (!page) {
-      page = 1;
-    }
-    if (!limit) {
-      limit = 2;
-    }
-    if (page) {
-      start = (page - 1) * limit;
-    }
+    const complaintList = await Complaint.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "complaintCategory",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "users",
+        },
+      },
+    ]);
 
-    const complaintList = await Complaint.find({});
-    const complist = complaintList.slice(start, start + Number(limit));
-    const total = Math.ceil(complaintList.length / Number(limit));
-
-    res
-      .status(200)
-      .send({ current_page: page, limit, total_page: total, complist });
+    res.status(200).send(complaintList);
   } catch (e) {
     res.status(404).send(e.message);
   }
@@ -115,9 +114,9 @@ const ComplaintDelete = async (req, res) => {
   try {
     const complaint = await Complaint.findOneAndDelete({ _id: req.params.id });
     if (!complaint) {
-      res.status(404).send();
+      res.status(404).send("Complaint not found.");
     }
-    res.send(complaint);
+    res.send("Complaint deleted successfully.");
   } catch (e) {
     res.status(500).send(e.message);
   }

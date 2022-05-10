@@ -20,6 +20,7 @@ app.use(categoryRouter);
 app.use(subcatRouter);
 app.use(complaintRouter);
 app.use(profileRouter);
+app.use("/public", express.static("public"));
 app.use(complaintRemarksRouter);
 app.use(feedbackRouter);
 app.use(stateRouter);

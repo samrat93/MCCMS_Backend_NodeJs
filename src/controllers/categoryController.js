@@ -37,7 +37,7 @@ const CategoryUpdate = async (req, res) => {
       throw new Error("Category Not Found.");
     }
     const updates = Object.keys(req.body);
-    const allowedUpdates = ["category_name", "category_desc"];
+    const allowedUpdates = ["categoryName", "categoryDesc"];
     const isValidOperation = updates.every((update) =>
       allowedUpdates.includes(update)
     );
@@ -46,7 +46,7 @@ const CategoryUpdate = async (req, res) => {
     }
     updates.forEach((update) => (category[update] = req.body[update]));
     await category.save();
-    res.json("Data Updated Successfully.");
+    res.json("Category updated successfully.");
   } catch (e) {
     res.status(400).send(e.message);
   }

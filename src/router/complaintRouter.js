@@ -14,12 +14,12 @@ const {
 } = require("../controllers/complaintController");
 
 const router = express.Router();
-router.post("/complaint", auth, upload.single("complaint_file"), ComplaintPost);
+router.post("/complaint", auth, upload.single("complaintFile"), ComplaintPost);
 router.get("/complaint/individual/:id", auth, ComplaintGet);
 router.patch(
   "/complaint/:id",
   auth,
-  upload.single("complaint_file"),
+  upload.single("complaintFile"),
   ComplaintUpdate
 );
 router.delete("/complaint/:id", auth, ComplaintDelete);
