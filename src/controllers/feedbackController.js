@@ -52,7 +52,7 @@ const FeedbackDelete = async (req, res) => {
       res.status(400).send(e.message);
     }
 
-    res.send(feedback);
+    res.send("Feedback deleted successfully.");
   } catch (e) {
     res.status(500).send(e.message);
   }

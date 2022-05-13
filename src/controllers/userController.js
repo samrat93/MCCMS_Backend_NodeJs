@@ -123,17 +123,18 @@ const generateOTP = () => {
 
 const ForgetPassword = async (req, res) => {
   try {
-    const user = await User.find({ email: req.body.email });
-    if (user.length === 0) {
-      throw new Error("User is not register with this email.");
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      res.status(400).send("User is not register with this email.");
+    } else {
+      const otp = generateOTP();
+      const opts = new OtP({ ...req.body, otp });
+      emailsend(req.body.email, otp);
+      await opts.save();
+      res.status(200).send(`OTP sended successfully to ${opts.email}`);
     }
-    const otp = generateOTP();
-    const opts = new OtP({ ...req.body, otp });
-    emailsend(req.body.email, otp);
-    await opts.save();
-    res.status(200).send(opts.email);
   } catch (e) {
-    res.status(400).send(err.message);
+    res.status(400).send(e.message);
   }
 };
 
@@ -179,7 +180,6 @@ const exportUser = async (req, res) => {
   worksheet.getRow(1).eachCell((cell) => {
     cell.font = { bold: true };
   });
-  const data2 = await workbook.xlsx;
   try {
     const data = await workbook.xlsx
       .writeFile(`${path}/users.xlsx`)
@@ -220,6 +220,12 @@ const logoutAll = async (req, res) => {
   }
 };
 
+const LoginUserDetails = async (req, res) => {
+  try {
+    res.status(200).send(req.user);
+  } catch (error) {}
+};
+
 module.exports = {
   Register,
   Login,
@@ -233,4 +239,5 @@ module.exports = {
   ActiveUsers,
   UnverifiedUsers,
   exportUser,
+  LoginUserDetails,
 };

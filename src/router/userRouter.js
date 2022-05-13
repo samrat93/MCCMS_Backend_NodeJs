@@ -13,6 +13,7 @@ const {
   exportUser,
   logout,
   logoutAll,
+  LoginUserDetails,
 } = require("../controllers/userController");
 
 const router = new express.Router();
@@ -29,5 +30,6 @@ router.get("/users/inactive-users", auth, UnverifiedUsers);
 router.get("/users/download", auth, exportUser);
 router.post("/users/logout", auth, logout);
 router.post("/users/logoutall", auth, logoutAll);
+router.get("/login-user-details", auth, LoginUserDetails);
 
 module.exports = router;

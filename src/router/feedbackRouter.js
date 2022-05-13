@@ -10,7 +10,7 @@ const {
 
 const router = express.Router();
 
-router.post("/feedback", auth, FeedbackPost);
+router.post("/feedback", FeedbackPost);
 router.get("/feedback", auth, FeedbackGet);
 router.patch("/feedback/:id", auth, FeedbackUpdate);
 router.delete("/feedback/:id", auth, FeedbackDelete);

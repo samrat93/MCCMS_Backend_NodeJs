@@ -8,6 +8,8 @@ const profileRouter = require("./router/profileRouter");
 const complaintRemarksRouter = require("./router/complaintRemarksRouter");
 const feedbackRouter = require("./router/feedbackRouter");
 const stateRouter = require("./router/stateRouter");
+const router = require("./router/dashboardRouter");
+const dashboardRouter = require("./router/dashboardRouter");
 
 require("./db/db");
 
@@ -24,6 +26,7 @@ app.use("/public", express.static("public"));
 app.use(complaintRemarksRouter);
 app.use(feedbackRouter);
 app.use(stateRouter);
+app.use(dashboardRouter);
 
 app.listen(port, () => {
   console.log("server is up on port" + port);
