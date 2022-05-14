@@ -8,8 +8,8 @@ const profileRouter = require("./router/profileRouter");
 const complaintRemarksRouter = require("./router/complaintRemarksRouter");
 const feedbackRouter = require("./router/feedbackRouter");
 const stateRouter = require("./router/stateRouter");
-const router = require("./router/dashboardRouter");
 const dashboardRouter = require("./router/dashboardRouter");
+const changePasswordRouter = require("./router/changePasswordRouter");
 
 require("./db/db");
 
@@ -27,6 +27,7 @@ app.use(complaintRemarksRouter);
 app.use(feedbackRouter);
 app.use(stateRouter);
 app.use(dashboardRouter);
+app.use(changePasswordRouter);
 
 app.listen(port, () => {
   console.log("server is up on port" + port);

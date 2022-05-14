@@ -3,16 +3,21 @@ const bcrypt = require("bcryptjs");
 
 const changePassword = async (req, res) => {
   try {
-    bcrypt.compare(req.body.oldPassword, user.password, function (err, res) {
-      if (err) {
-        throw err;
-      }
-      if (res) {
-      } else {
-        return res.status(400).send("Old password not matched.");
-      }
-    });
-  } catch (error) {
-    res.status(404).send(error.message);
+    const user = await User.findByCredentials(
+      req.user.email,
+      req.body.oldPassword
+    );
+    user.password = req.body.password;
+    await user.save();
+    return res.status(200).send("Password changed successfully.");
+  } catch (e) {
+    if ((e.message = "Invalid User..")) {
+      return res.status(401).send("Old Password is not matched.");
+    }
+    return res.status(400).send(e.message);
   }
+};
+
+module.exports = {
+  changePassword,
 };

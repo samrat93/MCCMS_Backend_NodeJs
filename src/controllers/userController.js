@@ -131,7 +131,7 @@ const ForgetPassword = async (req, res) => {
       const opts = new OtP({ ...req.body, otp });
       emailsend(req.body.email, otp);
       await opts.save();
-      res.status(200).send(`OTP sended successfully to ${opts.email}`);
+      res.status(200).send(opts.email);
     }
   } catch (e) {
     res.status(400).send(e.message);
@@ -139,14 +139,18 @@ const ForgetPassword = async (req, res) => {
 };
 
 const UpdatePassword = async (req, res) => {
-  const user = await OtP.find({ otp: req.body.otp, email: req.body.email });
-  if (user.length === 0) {
-    res.status(400).send("User not found, Sorry 😢");
-  } else {
-    const userData = await User.findOne({ email: req.body.email });
-    userData.password = req.body.password;
-    await userData.save();
-    res.status(200).send("Password updated successfully.");
+  try {
+    const user = await OtP.find({ otp: req.body.otp, email: req.body.email });
+    if (user.length === 0) {
+      res.status(400).send("OTP not matched");
+    } else {
+      const userData = await User.findOne({ email: req.body.email });
+      userData.password = req.body.password;
+      await userData.save();
+      res.status(200).send("Password updated successfully.");
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
   }
 };
 

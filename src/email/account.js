@@ -14,7 +14,7 @@ const emailsend = (email, otp) => {
     to: email,
     subject: "Sending Email using Node.js",
     html: `<h1>Your otp is : ${otp}</h1>
-      <h3>otp is valid only 5 minute</h3>`,
+      <h3>otp is valid only for 2 minutes</h3>`,
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
