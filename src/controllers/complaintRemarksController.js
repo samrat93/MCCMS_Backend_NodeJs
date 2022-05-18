@@ -4,7 +4,7 @@ const ComplaintRemarksPost = async (req, res) => {
   try {
     const complaintRemarks = new ComplaintRemarks(req.body);
     await complaintRemarks.save();
-    res.status(201).send(complaintRemarks);
+    res.status(201).send("Complaint status changed successfully.");
   } catch (e) {
     res.status(400).send(e.message);
   }

@@ -17,7 +17,7 @@ const router = express.Router();
 router.post("/complaint", auth, upload.single("complaintFile"), ComplaintPost);
 router.get("/complaint/individual", auth, ComplaintGet);
 router.patch(
-  "/complaint",
+  "/complaint/:id",
   auth,
   upload.single("complaintFile"),
   ComplaintUpdate

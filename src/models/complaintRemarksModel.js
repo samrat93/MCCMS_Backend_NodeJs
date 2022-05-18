@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const complaintRemarksSchema = new mongoose.Schema(
   {
-    complaint_status: {
+    complaintStatus: {
       type: String,
       enum: ["Processing", "Closed"],
       required: true,
@@ -11,7 +11,7 @@ const complaintRemarksSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    complaint_number: {
+    complaintNumber: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Complaint",
     },
