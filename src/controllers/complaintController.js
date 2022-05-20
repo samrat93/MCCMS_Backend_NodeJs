@@ -33,6 +33,7 @@ const ComplaintPost = async (req, res) => {
     const complaint = new Complaint({
       ...req.body,
       complaintFile: pathName,
+      userId: req.user._id,
     });
     await complaint.save();
     res.status(201).send("Complaint registered successfully.");
